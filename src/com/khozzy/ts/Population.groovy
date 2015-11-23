@@ -1,6 +1,8 @@
 package com.khozzy.ts
 
 class Population {
+    final static def MATCH_MAX = 3
+
     def individuals = []
 
     Population(size) {
@@ -16,6 +18,15 @@ class Population {
     }
 
     private def assignRandomly() {
-        //TODO: Assign people to each other randomly
+
+        for (i in individuals) {
+            while (i.matches.size() < MATCH_MAX) {
+                def randomId = (int) (Math.random() * individuals.size())
+
+                if (!(randomId in i.matches) && (randomId != i.id)) {
+                    i.matches.add(randomId)
+                }
+            }
+        }
     }
 }

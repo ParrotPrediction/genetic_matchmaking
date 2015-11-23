@@ -6,7 +6,7 @@ import groovy.transform.ToString
 class Participant {
 
     final static def PICK_SKILL_PROB = 0.2
-    final static def PICK_NEED_PROP = 0.4
+    final static def PICK_NEED_PROB = 0.4
 
     def id
     def skills = []
@@ -33,7 +33,7 @@ class Participant {
 
         // Generate needs
         for (value in Skill.values()) {
-            if (!(value in skills) && (Math.random() <= PICK_NEED_PROP)) {
+            if (!(value in skills) && (Math.random() <= PICK_NEED_PROB)) {
                 needs.add(value)
             }
         }
