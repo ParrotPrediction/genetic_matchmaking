@@ -39,8 +39,23 @@ class Participant {
         }
     }
 
-    def getFitness() {
-        //TODO: Implement me
-        return fitness
+    def calculateFitness(Population population) {
+        def fitness = 0
+
+        // Iterate through needs, and check if they are fulfilled
+        for (n in needs) {
+
+            // Check if any of the matches has the skills
+            for (m in matches) {
+                def possibleMatch = (Participant) population.individuals[m]
+
+                if (n in possibleMatch.skills) {
+                    fitness++
+                    break
+                }
+            }
+        }
+
+        this.fitness = fitness
     }
 }

@@ -17,6 +17,28 @@ class Population {
         assignRandomly()
     }
 
+    def getFitness() {
+        def fitness = 0
+
+        for (i in individuals) {
+            fitness += i.fitness
+        }
+
+        return fitness
+    }
+
+    def getMaxFitness() {
+        def maxFitness = 0
+
+        for (i in individuals) {
+            for (n in i.needs) {
+                maxFitness++
+            }
+        }
+
+        return maxFitness
+    }
+
     private def assignRandomly() {
 
         for (i in individuals) {
@@ -27,6 +49,8 @@ class Population {
                     i.matches.add(randomId)
                 }
             }
+
+            i.calculateFitness(this)
         }
     }
 }
