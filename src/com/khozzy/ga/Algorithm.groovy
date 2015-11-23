@@ -27,6 +27,11 @@ class Algorithm {
             newPopulation.individuals[i] = newIndiv
         }
 
+        // Mutate population
+        for (i in elitismOffset ..< pop.individuals.size()) {
+            mutate(newPopulation.individuals[i])
+        }
+
         return newPopulation
     }
 
