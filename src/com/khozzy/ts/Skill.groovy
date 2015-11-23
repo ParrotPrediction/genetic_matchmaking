@@ -1,4 +1,4 @@
-package com.khozzy.ga
+package com.khozzy.ts
 
 enum Skill {
     WEB_DEV,

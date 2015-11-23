@@ -9,7 +9,7 @@ class Individual {
     def fitness = 0 // cache
 
     def generateIndividual() {
-        for (i in 0..<defaultGeneLength) {
+        for (i in 0 ..< defaultGeneLength) {
             def gene = (byte) Math.round(Math.random())
             genes[i] = gene
         }
