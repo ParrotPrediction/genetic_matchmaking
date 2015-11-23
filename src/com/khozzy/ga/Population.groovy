@@ -4,10 +4,10 @@ class Population {
     def individuals = []
 
     // Create population
-    Population(populationSize) {
-        individuals = new Individual[populationSize]
+    Population(size) {
+        individuals = new Individual[size]
 
-        for (i in 0..<populationSize) {
+        for (i in 0 ..< size) {
             Individual newIndividual = new Individual()
             newIndividual.generateIndividual()
             individuals[i] = newIndividual
