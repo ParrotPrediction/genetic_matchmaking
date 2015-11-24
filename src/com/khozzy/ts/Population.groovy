@@ -17,6 +17,11 @@ class Population {
         assignRandomly()
     }
 
+    /**
+     * Calculates how well is population fitted
+     *
+     * @return value between 0 (poor matching) and 1 (best matching)
+     */
     def getFitness() {
         def fitness = 0
 
@@ -24,19 +29,7 @@ class Population {
             fitness += i.fitness
         }
 
-        return fitness
-    }
-
-    def getMaxFitness() {
-        def maxFitness = 0
-
-        for (i in individuals) {
-            for (n in i.needs) {
-                maxFitness++
-            }
-        }
-
-        return maxFitness
+        return fitness / individuals.size()
     }
 
     private def assignRandomly() {
