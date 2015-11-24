@@ -4,6 +4,8 @@ import java.util.concurrent.ThreadLocalRandom
 
 class Algorithm {
 
+    static final def UNIFORM_RATE = 0.5
+
     static def evolvePopulation(Population pop) {
         def newPopulation = new Population(pop.individuals.size())
 
@@ -11,7 +13,7 @@ class Algorithm {
         // keep 5-10% of all best matches
         pop.individuals = pop.individuals.sort { -it.fitness }
         def percentage = ThreadLocalRandom.current().nextInt(5, 10 + 1)
-        def elitismOffset = percentage * pop.individuals.size() / 100
+        def elitismOffset = (int) (percentage * pop.individuals.size() / 100)
 
         for (i in 0 ..< elitismOffset) {
             newPopulation.individuals[i] = pop.individuals[i]
@@ -19,11 +21,13 @@ class Algorithm {
 
         // Crossover
         for (i in elitismOffset ..< pop.individuals.size()) {
-            //def indiv1 = tournamentSelection(pop)
-            //def indiv2 = tournamentSelection(pop)
-            //def newIndiv = crossover(indiv1, indiv2)
+            def indiv = pop.individuals[i]
+            def randomIndiv = randomSelection(pop)
 
-            //newPopulation.individuals[i] = newIndiv
+            if (indiv != randomIndiv) {
+                indiv = crossover(indiv, randomIndiv, pop)
+                newPopulation.individuals[i] = indiv
+            }
         }
 
         // Mutation
@@ -31,21 +35,44 @@ class Algorithm {
             //mutate(newPopulation.individuals[i])
         }
 
+        newPopulation.recalculateFitness()
         return newPopulation
     }
 
-    // TODO: Crossover
-    private static def crossover(indiv1, indiv2) {
-        return null
+    private static def crossover(indiv, randomIndiv, population) {
+        indiv = (Participant) indiv
+        randomIndiv = (Participant) randomIndiv
+
+        //print "Doing crossover between ${indiv.id} and ${randomIndiv.id}"
+
+        if (randomIndiv.id in indiv.matches) {
+           print " +"
+            // There is a useless match - remove it
+            if (!indiv.isUseful(randomIndiv) && Math.random() <= UNIFORM_RATE) {
+                print "*"
+                indiv.matches - randomIndiv.id
+            }
+
+        } else {
+            print " -"
+            // No matching already, but might be promising - add it
+            if (indiv.isUseful(randomIndiv) && Math.random() <= UNIFORM_RATE) {
+                print "*"
+                indiv.addMatching(randomIndiv, population)
+            }
+        }
+       // println ''
+
+        return indiv
     }
 
     //TODO: Mutate
     private static def mutate(indiv) {
     }
 
-    // TODO: Tournament Selection
-    private static def tournamentSelection(pop) {
-        return null
+    private static def randomSelection(Population pop) {
+        def randomId = (int) (Math.random() * pop.individuals.size())
+        return pop.individuals[randomId]
     }
 
 }

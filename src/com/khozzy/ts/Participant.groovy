@@ -2,6 +2,8 @@ package com.khozzy.ts
 
 import groovy.transform.ToString
 
+import java.util.concurrent.ThreadLocalRandom
+
 @ToString
 class Participant {
 
@@ -35,6 +37,41 @@ class Participant {
         for (value in Skill.values()) {
             if (!(value in skills) && (Math.random() <= PICK_NEED_PROB)) {
                 needs.add(value)
+            }
+        }
+    }
+
+    def isUseful(Participant individual) {
+        for (need in this.needs) {
+            if (need in individual.skills) {
+                return true
+            }
+        }
+        return false
+    }
+
+    def addMatching(Participant individual, Population population) {
+        if (matches.size() < 3) {
+            matches.add(individual.id)
+        } else {
+            // Find useless matching and replace it
+            def uselessId
+
+            for (m in matches) {
+                Participant matching = population.getIndividualById(m)
+
+                for (sm in matching.skills) {
+                    if (!(matching.skills in needs)) {
+                        uselessId = matching.id
+                    }
+                }
+            }
+
+            if (uselessId) {
+                print 'FU'
+            } else {
+                def randomMatch = ThreadLocalRandom.current().nextInt(0, 3 + 1)
+                //matches[randomMatch] = individual.id
             }
         }
     }

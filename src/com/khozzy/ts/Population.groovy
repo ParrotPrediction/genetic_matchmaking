@@ -17,12 +17,22 @@ class Population {
         assignRandomly()
     }
 
+    def getIndividualById(id) {
+        for (i in individuals) {
+            if (i.id == id) {
+                return i
+            }
+        }
+
+        return null
+    }
+
     /**
      * Calculates how well is population fitted
      *
      * @return value between 0 (poor matching) and 1 (best matching)
      */
-    def getFitness() {
+    def getOverallFitness() {
         def fitness = 0
 
         for (i in individuals) {
@@ -30,6 +40,12 @@ class Population {
         }
 
         return fitness / individuals.size()
+    }
+
+    def recalculateFitness() {
+        individuals.each { individual ->
+            individual.calculateFitness(this)
+        }
     }
 
     private def assignRandomly() {
