@@ -1,78 +1,57 @@
 package com.khozzy.ts
 
-import java.util.concurrent.ThreadLocalRandom
-
 class Algorithm {
 
-    static final def UNIFORM_RATE = 0.5
+    static final def MUTATION_PROB = 0.0003
 
     static def evolvePopulation(Population pop) {
-        def newPopulation = new Population(pop.individuals.size())
+        def newPopulation = (Population) pop.clone()
 
-        // Elitism
-        // keep 5-10% of all best matches
-        pop.individuals = pop.individuals.sort { -it.fitness }
-        def percentage = ThreadLocalRandom.current().nextInt(5, 10 + 1)
-        def elitismOffset = (int) (percentage * pop.individuals.size() / 100)
+        crossover(newPopulation)
+        mutate(newPopulation)
 
-        for (i in 0 ..< elitismOffset) {
-            newPopulation.individuals[i] = pop.individuals[i]
-        }
-
-        // Crossover
-        for (i in elitismOffset ..< pop.individuals.size()) {
-            def indiv = pop.individuals[i]
-            def randomIndiv = randomSelection(pop)
-
-            if (indiv != randomIndiv) {
-                indiv = crossover(indiv, randomIndiv, pop)
-                newPopulation.individuals[i] = indiv
-            }
-        }
-
-        // Mutation
-        for (i in elitismOffset ..< pop.individuals.size()) {
-            //mutate(newPopulation.individuals[i])
-        }
-
-        newPopulation.recalculateFitness()
         return newPopulation
     }
 
-    private static def crossover(indiv, randomIndiv, population) {
-        indiv = (Participant) indiv
-        randomIndiv = (Participant) randomIndiv
+    private static def crossover(Population pop) {
+        def indiv1 = (Participant) pop.getRandomIndividual()
+        def indiv2 = (Participant) pop.getRandomIndividual()
 
-        //print "Doing crossover between ${indiv.id} and ${randomIndiv.id}"
+        if (indiv1 != indiv2) {
 
-        if (randomIndiv.id in indiv.matches) {
-           print " +"
-            // There is a useless match - remove it
-            if (!indiv.isUseful(randomIndiv) && Math.random() <= UNIFORM_RATE) {
-                print "*"
-                indiv.matches - randomIndiv.id
-            }
+            if (indiv1.isUseful(indiv2)) {
 
-        } else {
-            print " -"
-            // No matching already, but might be promising - add it
-            if (indiv.isUseful(randomIndiv) && Math.random() <= UNIFORM_RATE) {
-                print "*"
-                indiv.addMatching(randomIndiv, population)
+                def alternatives = []
+
+                indiv1.matches.eachWithIndex { match, index ->
+                    def altPop = (Population) pop.clone()
+                    altPop.match(indiv1.id, indiv2.id, index)
+
+                    alternatives.add([index: index, fitness: altPop.fitness()])
+                }
+
+                alternatives.sort { -it.fitness }
+                def bestAlt = alternatives.first()
+
+                if (bestAlt.fitness > pop.fitness()) {
+                    pop.match(indiv1.id, indiv2.id, bestAlt.index)
+                }
             }
         }
-       // println ''
-
-        return indiv
     }
 
-    //TODO: Mutate
-    private static def mutate(indiv) {
-    }
+    private static def mutate(Population pop) {
 
-    private static def randomSelection(Population pop) {
-        def randomId = (int) (Math.random() * pop.individuals.size())
-        return pop.individuals[randomId]
+        if (Math.random() < MUTATION_PROB) {
+
+            def indiv1 = (Participant) pop.getRandomIndividual()
+            def indiv2 = (Participant) pop.getRandomIndividual()
+            def randomIndex = (int) (Math.random() * indiv1.matches.size())
+
+            if (indiv1 != indiv2) {
+                pop.match(indiv1.id, indiv2.id, randomIndex)
+            }
+        }
     }
 
 }
