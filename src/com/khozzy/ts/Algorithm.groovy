@@ -27,7 +27,7 @@ class Algorithm {
                     def altPop = (Population) pop.clone()
                     altPop.match(indiv1.id, indiv2.id, index)
 
-                    alternatives.add([index: index, fitness: altPop.fitness()])
+                    alternatives << ([index: index, fitness: altPop.fitness()])
                 }
 
                 alternatives.sort { -it.fitness }

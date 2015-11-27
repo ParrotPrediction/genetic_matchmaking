@@ -30,7 +30,7 @@ class Population implements Serializable {
     def fitness() {
         def fitness = 0
 
-        for (i in individuals) {
+        individuals.each { i ->
             i.calculateFitness(this)
             fitness += i.fitness
         }
@@ -51,31 +51,26 @@ class Population implements Serializable {
     def match(indiv1id, indiv2id, position) {
         Participant indiv1 = getIndividualById(indiv1id)
 
-        if (indiv1.matches.size() < 3) {
-            indiv1.matches.add(indiv2id)
+        if (indiv1.matches.size() < MATCH_MAX) {
+            indiv1.matches << indiv2id
         } else {
             indiv1.matches[position] = indiv2id
         }
     }
 
     private def getIndividualById(id) {
-        for (i in individuals) {
-            if (i.id == id) {
-                return i
-            }
+        return individuals.find { i ->
+            i.id == id
         }
-
-        return null
     }
 
     private def assignRandomly() {
-
         for (i in individuals) {
             while (i.matches.size() < MATCH_MAX) {
                 def randomId = (int) (Math.random() * individuals.size())
 
                 if (!(randomId in i.matches) && (randomId != i.id)) {
-                    i.matches.add(randomId)
+                    i.matches << randomId
                 }
             }
         }

@@ -1,7 +1,7 @@
 import com.khozzy.ts.Algorithm
 import com.khozzy.ts.Population
 
-final def POPULATION_SIZE = 20
+final def POPULATION_SIZE = 50
 final def GENERATIONS = 3000
 final def RESULTS_EVERY_N = 500
 

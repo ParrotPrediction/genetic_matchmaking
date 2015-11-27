@@ -27,14 +27,14 @@ class Participant implements Serializable {
         // Generate skills
         for (value in Skill.values()) {
             if (Math.random() <= PICK_SKILL_PROB) {
-                skills.add(value)
+                skills << value
             }
         }
 
         // Generate needs
         for (value in Skill.values()) {
             if (!(value in skills) && (Math.random() <= PICK_NEED_PROB)) {
-                needs.add(value)
+                needs << value
             }
         }
     }
