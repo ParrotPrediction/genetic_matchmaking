@@ -1,4 +1,4 @@
-package com.khozzy.ts
+package com.parrotprediction.gm
 
 class Algorithm {
 

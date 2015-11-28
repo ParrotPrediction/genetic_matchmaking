@@ -1,5 +1,5 @@
-import com.khozzy.ts.Algorithm
-import com.khozzy.ts.Population
+import com.parrotprediction.gm.Algorithm
+import com.parrotprediction.gm.Population
 
 final def POPULATION_SIZE = 50
 final def GENERATIONS = 3000

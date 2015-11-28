@@ -1,4 +1,4 @@
-package com.khozzy.ts
+package com.parrotprediction.gm
 
 import groovy.transform.AutoClone
 import groovy.transform.AutoCloneStyle
